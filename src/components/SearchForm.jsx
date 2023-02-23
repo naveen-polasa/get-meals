@@ -1,7 +1,7 @@
 import { useMealContext } from "../context";
 
 const SearchForm = () => {
-  const { search,handleSearch } = useMealContext();
+  const { search, handleSearch } = useMealContext();
   return (
     <div className="max-w-7xl my-6 flex mx-auto">
       <input

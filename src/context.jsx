@@ -5,6 +5,8 @@ import {
   useEffect,
   useReducer,
 } from "react";
+import { reducer } from "./utils/reducer";
+import Paginate from "./utils/Paginate";
 
 const MealContext = createContext();
 
@@ -18,31 +20,11 @@ const defaultState = {
   mealsList: [],
   singleMeal: [],
   isEmpty: false,
+  currentPage: 0,
 };
 
 const MealsContext = ({ children }) => {
-  const [state, dispatch] = useReducer((state, action) => {
-    switch (action.type) {
-      case "SEARCH_WORD": {
-        return { ...state, search: action.payload };
-      }
-      case "SET_MEALS_LIST": {
-        return { ...state, mealsList: action.payload };
-      }
-      case "LOADING": {
-        return { ...state, loading: !state.loading };
-      }
-      case "ERROR": {
-        return { ...state, error: true };
-      }
-      case "SET_SINGLE_MEAL": {
-        return { ...state, singleMeal: action.payload };
-      }
-      case "NO_MEALS": {
-        return { ...state, isEmpty: action.payload };
-      }
-    }
-  }, defaultState);
+  const [state, dispatch] = useReducer(reducer, defaultState);
 
   const handleSearch = (e) => {
     const searchValue = e.target.value;
@@ -50,20 +32,23 @@ const MealsContext = ({ children }) => {
   };
 
   const fetchMeals = useCallback(async () => {
+    dispatch({ type: "ERROR", payload: false });
     dispatch({ type: "NO_MEALS", payload: false });
-    dispatch({ type: "LOADING" });
+    dispatch({ type: "LOADING", payload: true });
     try {
       const response = await fetch(`${url}${state.search}`);
-      const data = await response.json();
-      if (!data.meals) {
+      const { meals } = await response.json();
+      if (!meals) {
         dispatch({ type: "NO_MEALS", payload: true });
       }
-      dispatch({ type: "SET_MEALS_LIST", payload: data.meals });
-
-      dispatch({ type: "LOADING" });
+      dispatch({ type: "LOADING", payload: false });
+      dispatch({
+        type: "SET_MEALS_LIST",
+        payload: Paginate(meals),
+      });
     } catch (error) {
       console.log(error);
-      dispatch({ type: "ERROR" });
+      dispatch({ type: "ERROR", payload: true });
     }
   }, [state.search]);
 
@@ -75,21 +60,26 @@ const MealsContext = ({ children }) => {
     dispatch({ type: "SET_SINGLE_MEAL", payload: [] });
     try {
       const response = await fetch(`${single_meal_url}${id}`);
-      console.log(response.ok);
       if (!response.ok) {
-        dispatch({ type: "ERROR" });
+        dispatch({ type: "ERROR",payload:true });
         return;
       }
       const { meals } = await response.json();
       dispatch({ type: "SET_SINGLE_MEAL", payload: meals });
     } catch (error) {
       console.log(error);
-      dispatch({ type: "ERROR" });
+      dispatch({ type: "ERROR", payload: true });
     }
   };
 
+  const paginateBtn = (index) => {
+    dispatch({ type: "CHANGE_PAGE", payload: index });
+  };
+
   return (
-    <MealContext.Provider value={{ ...state, handleSearch, getSingleMeal }}>
+    <MealContext.Provider
+      value={{ ...state, handleSearch, getSingleMeal, paginateBtn }}
+    >
       {children}
     </MealContext.Provider>
   );

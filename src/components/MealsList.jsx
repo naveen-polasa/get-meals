@@ -1,8 +1,10 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useMealContext } from "../context";
 
 const MealsList = () => {
-  const { mealsList, loading, error, isEmpty } = useMealContext();
+  const { mealsList, currentPage, loading, error, isEmpty, paginateBtn } =
+    useMealContext();
 
   if (loading) {
     return (
@@ -12,9 +14,11 @@ const MealsList = () => {
       </div>
     );
   }
-  if (isEmpty || !mealsList) {
+
+  if (isEmpty || !mealsList[0]) {
     return <h4 className="text-center text-4xl py-12">No Meals Found...</h4>;
   }
+  
   if (error) {
     return (
       <div className="text-center text-3xl h-36 flex items-center justify-center font-semibold">
@@ -26,7 +30,7 @@ const MealsList = () => {
   return (
     <div className="max-w-7xl px-5 mx-auto">
       <div className="mx-auto  flex gap-8 flex-wrap  justify-center">
-        {mealsList.map((meal) => {
+        {mealsList[currentPage].map((meal) => {
           const {
             strMeal: name,
             idMeal: id,
@@ -55,6 +59,19 @@ const MealsList = () => {
             </article>
           );
         })}
+      </div>
+      <div className="text-center">
+      {mealsList.map((meal, index) => {
+        return (
+          <button
+            key={index}
+            className=" mx-3 my-3 px-4 py-2 border w-min rounded-lg bg-red-400 hover:scale-110 hover:bg-orange-400 duration-300 text-white"
+            onClick={() => paginateBtn(index)}
+          >
+            {index + 1}
+          </button>
+        );
+      })}
       </div>
     </div>
   );
