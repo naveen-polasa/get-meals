@@ -1,30 +1,22 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useMealContext } from "../context";
+import Loading from "./Loading";
 
 const MealsList = () => {
   const { mealsList, currentPage, loading, error, isEmpty, paginateBtn } =
     useMealContext();
 
   if (loading) {
-    return (
-      <div className="text-center text-3xl flex items-center gap-x-6 justify-center h-44">
-        <span className="animate-spin inline-block  h-12 w-12  rounded-full text-white border-4 border-red-300  border-t-red-500"></span>{" "}
-        Loading...
-      </div>
-    );
+    return <Loading />;
   }
 
   if (isEmpty || !mealsList[0]) {
     return <h4 className="text-center text-4xl py-12">No Meals Found...</h4>;
   }
-  
+
   if (error) {
-    return (
-      <div className="text-center text-3xl h-36 flex items-center justify-center font-semibold">
-        There was an error...
-      </div>
-    );
+    return <Error />;
   }
 
   return (
@@ -61,17 +53,17 @@ const MealsList = () => {
         })}
       </div>
       <div className="text-center">
-      {mealsList.map((meal, index) => {
-        return (
-          <button
-            key={index}
-            className=" mx-3 my-3 px-4 py-2 border w-min rounded-lg bg-red-400 hover:scale-110 hover:bg-orange-400 duration-300 text-white"
-            onClick={() => paginateBtn(index)}
-          >
-            {index + 1}
-          </button>
-        );
-      })}
+        {mealsList.map((meal, index) => {
+          return (
+            <button
+              key={index}
+              className=" mx-3 my-3 px-4 py-2 border w-min rounded-lg bg-red-400 hover:scale-110 hover:bg-orange-400 duration-300 text-white"
+              onClick={() => paginateBtn(index)}
+            >
+              {index + 1}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
