@@ -8,9 +8,13 @@ const Navbar = () => {
           <h3 className="font-bold text-2xl">GetMeals</h3>
         </Link>
         <div className="flex gap-12 font-semibold text-xl">
-          <Link to="/">Meals</Link>
+          <Link to="/" className="border-b-red-500 hover:border-b duration-300">
+            Meals
+          </Link>
           <Link to="about">
-            <h3>About</h3>
+            <h3 className="border-b-red-500 hover:border-b duration-300">
+              About
+            </h3>
           </Link>
         </div>
       </nav>

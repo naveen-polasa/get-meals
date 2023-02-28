@@ -8,13 +8,17 @@ import SingleMeal from "./pages/SingleMeal";
 function App() {
   return (
     <Router>
-      <Navbar />
-      <Routes>
-        <Route exact path="/" element={<Home />} />
-        <Route path="about" element={<About />} />
-        <Route path="meal/:id" element={<SingleMeal />} />
-        <Route path="*" element={<Error />} />
-      </Routes>
+      <div className="bg-green-100">
+        <Navbar />
+        <div className="max-w-7xl mx-auto min-h-screen">
+          <Routes>
+            <Route exact path="/" element={<Home />} />
+            <Route path="about" element={<About />} />
+            <Route path="meal/:id" element={<SingleMeal />} />
+            <Route path="*" element={<Error />} />
+          </Routes>
+        </div>
+      </div>
     </Router>
   );
 }

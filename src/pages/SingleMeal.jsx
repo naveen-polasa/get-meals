@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
+import Error from "../components/Error";
+import Loading from "../components/Loading";
 import { useMealContext } from "../context";
 
 const SingleMeal = () => {
@@ -10,20 +12,11 @@ const SingleMeal = () => {
     getSingleMeal(id);
   }, []);
 
-  if (singleMeal.length === 0) {
-    return (
-      <div className="text-center text-3xl flex items-center gap-x-6 justify-center h-44">
-        <span className="animate-spin inline-block  h-12 w-12  rounded-full text-white border-4 border-red-300  border-t-red-500"></span>{" "}
-        Loading...
-      </div>
-    );
-  }
   if (error) {
-    return (
-      <div className="text-center text-3xl h-36 flex items-center justify-center font-semibold">
-        There was an error...
-      </div>
-    );
+    return <Error />;
+  }
+  if (singleMeal.length === 0) {
+    return <Loading />;
   }
 
   const {
@@ -35,11 +28,11 @@ const SingleMeal = () => {
   } = singleMeal[0];
 
   return (
-    <section className="w-[99x%] lg:w-[66%] mx-auto text-center">
-      <h2 className="text-3xl my-5">{name} </h2>
-      <div className="lg:flex  gap-x-12">
-        <div className="w-72 md:w-96 mx-auto my-6 ">
-          <img src={image} alt={name} className="" />
+    <section className="w-[98%] lg:w-[66%] mx-auto text-center ">
+      <h2 className="text-3xl my-5 font-bold">{name} </h2>
+      <div className="md:flex gap-x-12 items-center m-4 border-2 md:p-6 border-red-400 bg-red-50 rounded-xl">
+        <div className="w-72 md:w-96 mx-auto my-6 md:pb-9">
+          <img src={image} alt={name} />
         </div>
         <div className="text-xl py-3 m-2 mx-auto text-start flex flex-col gap-6 w-[70%] lg:w-[50%]">
           <p>

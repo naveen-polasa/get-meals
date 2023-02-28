@@ -32,16 +32,20 @@ const MealsContext = ({ children }) => {
   };
 
   const fetchMeals = useCallback(async () => {
-    dispatch({ type: "ERROR", payload: false });
-    dispatch({ type: "NO_MEALS", payload: false });
-    dispatch({ type: "LOADING", payload: true });
     try {
+      dispatch({ type: "ERROR", payload: false });
+      dispatch({ type: "NO_MEALS", payload: false });
+      dispatch({ type: "LOADING", payload: true });
+
       const response = await fetch(`${url}${state.search}`);
       const { meals } = await response.json();
       if (!meals) {
         dispatch({ type: "NO_MEALS", payload: true });
       }
       dispatch({ type: "LOADING", payload: false });
+      if (meals === null) {
+        return;
+      }
       dispatch({
         type: "SET_MEALS_LIST",
         payload: Paginate(meals),
@@ -57,13 +61,8 @@ const MealsContext = ({ children }) => {
   }, [state.search]);
 
   const getSingleMeal = async (id) => {
-    dispatch({ type: "SET_SINGLE_MEAL", payload: [] });
     try {
       const response = await fetch(`${single_meal_url}${id}`);
-      if (!response.ok) {
-        dispatch({ type: "ERROR",payload:true });
-        return;
-      }
       const { meals } = await response.json();
       dispatch({ type: "SET_SINGLE_MEAL", payload: meals });
     } catch (error) {

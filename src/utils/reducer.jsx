@@ -16,7 +16,7 @@ export const reducer = (state, action) => {
       return { ...state, singleMeal: action.payload };
     }
     case "NO_MEALS": {
-      return { ...state, isEmpty: action.payload };
+      return { ...state, isEmpty: action.payload, };
     }
     case "CHANGE_PAGE": {
       return { ...state, currentPage: action.payload };
